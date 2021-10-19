@@ -1,6 +1,4 @@
-import { Event } from '.prisma/client';
-
-export class GetEventDto implements Event {
+export class GetEventDto {
   /**
    * The id of a event
    * @example '1'

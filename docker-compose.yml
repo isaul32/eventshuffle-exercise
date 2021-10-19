@@ -5,12 +5,23 @@ services:
     restart: unless-stopped
     ports:
       - '3000:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
   postgres:
     image: 'postgres:14'
     restart: unless-stopped
-    ports:
-      - '5432:5432'
     environment:
       POSTGRES_USER: eventshuffle
       POSTGRES_PASSWORD: eventshuffle
       POSTGRES_DB: eventshuffle
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U eventshuffle']
+      interval: 10s
+      timeout: 5s
+      retries: 5
