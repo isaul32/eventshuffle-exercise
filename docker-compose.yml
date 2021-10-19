@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+  postgres:
+    image: 'postgres:14'
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: eventshuffle
+      POSTGRES_PASSWORD: eventshuffle
+      POSTGRES_DB: eventshuffle
