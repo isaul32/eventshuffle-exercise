@@ -9,3 +9,18 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Event {
+  id    Int        @id @default(autoincrement())
+  name  String
+  dates DateTime[]
+  votes Vote[]
+}
+
+model Vote {
+  id      Int      @id @default(autoincrement())
+  date    DateTime
+  people  String[]
+  event   Event    @relation(fields: [eventId], references: [id])
+  eventId Int
+}
