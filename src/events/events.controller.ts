@@ -3,13 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   ParseIntPipe,
   HttpCode,
-  Logger,
   NotFoundException,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -22,9 +21,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetEventDto } from './dto/get-event.dto';
+import { Request, Response } from 'express';
 
 @ApiTags('event')
-@Controller('event')
+@Controller({
+  path: 'event',
+  version: '1',
+})
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
@@ -34,11 +37,18 @@ export class EventsController {
   @Post()
   @HttpCode(201)
   @ApiCreatedResponse({
-    description: 'The record has been successfully created.',
+    description: 'Successful operation',
   })
-  @ApiBadRequestResponse({ description: 'Bad Request.' })
-  async create(@Body() createEventDto: CreateEventDto) {
-    return await this.eventsService.create(createEventDto);
+  @ApiBadRequestResponse({ description: 'Invalid request' })
+  async create(
+    @Body() createEventDto: CreateEventDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const event = await this.eventsService.create(createEventDto);
+    res.header('Location', `${req.url}/${event.id}`);
+    res.send(event);
+    return res;
   }
 
   /**
@@ -46,7 +56,7 @@ export class EventsController {
    */
   @Get('list')
   @ApiOkResponse({
-    description: 'A list of all events',
+    description: 'Successful operation',
     isArray: true,
     type: GetEventDto,
   })
@@ -55,11 +65,11 @@ export class EventsController {
   }
 
   /**
-   * This action returns a event
+   * This action returns an event
    */
   @Get(':id')
-  @ApiNotFoundResponse({ description: 'Not Found.' })
-  @ApiOkResponse({ description: 'Asd' })
+  @ApiNotFoundResponse({ description: 'Event not found' })
+  @ApiOkResponse({ description: 'Successful operation', type: GetEventDto })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const event = await this.eventsService.findOne(id);
     if (!event) {
@@ -81,7 +91,7 @@ export class EventsController {
   }
 
   /**
-   * This action returns results of a event
+   * This action returns results of an event
    */
   @Get(':id/results')
   async findOneResult(@Param('id', ParseIntPipe) id: number) {

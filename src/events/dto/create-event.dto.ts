@@ -1,23 +1,15 @@
-import { Transform } from 'class-transformer';
-import {
-  ArrayNotEmpty,
-  IsArray,
-  IsDateString,
-  IsISO8601,
-  IsNotEmpty,
-  ValidateNested,
-} from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsISO8601, IsNotEmpty } from 'class-validator';
 
 export class CreateEventDto {
   /**
-   * The name of a event
+   * The name of an event
    * @example 'Jake's secret party'
    */
   @IsNotEmpty()
   name: string;
 
   /**
-   * Suitable dates for a event
+   * Suitable dates for an event
    * @example ['2014-01-01', '2014-01-05', '2014-01-12']
    */
   @IsArray()

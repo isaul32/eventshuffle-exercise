@@ -1,12 +1,12 @@
 export class GetEventDto {
   /**
-   * The id of a event
+   * The id of an event
    * @example '1'
    */
   id: number;
 
   /**
-   * The name of a event
+   * The name of an event
    * @example 'Jake's secret party'
    */
   name: string;

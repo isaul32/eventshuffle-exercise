@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -10,10 +10,16 @@ async function bootstrap() {
   app.use(compression());
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [
+      { path: '', method: RequestMethod.GET }, // Exclude root redirect
+    ],
+  });
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   const config = new DocumentBuilder()
-    .setBasePath('api')
     .setTitle('Eventshuffle backend API')
     .setDescription('The awesome API to help scheduling events with friends.')
     .setVersion('1.0')
