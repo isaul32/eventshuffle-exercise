@@ -2,14 +2,14 @@ import { IsArray, IsISO8601, IsNotEmpty } from 'class-validator';
 
 export class CreateVoteDto {
   /**
-   * The name of an event
-   * @example 'Jake's secret party'
+   * The name of a person
+   * @example 'Dick'
    */
   @IsNotEmpty()
   name: string;
 
   /**
-   * Votes for an event
+   * Suitable dates for a person
    * @example ['2014-01-01', '2014-01-05']
    */
   @IsArray()

@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Req,
   Res,
+  BadRequestException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -20,8 +21,8 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetEventDto } from './dto/get-event.dto';
 import { Request, Response } from 'express';
+import { InvalidVoteDateException } from 'src/common/exceptions/invalid-vote-date.exception';
 
 @ApiTags('event')
 @Controller({
@@ -30,6 +31,18 @@ import { Request, Response } from 'express';
 })
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
+
+  /**
+   * This action returns all events
+   */
+  @Get('list')
+  @ApiOkResponse({
+    description: 'Successful operation',
+    isArray: true,
+  })
+  async findAll() {
+    return await this.eventsService.findAll();
+  }
 
   /**
    * This action adds a new event
@@ -52,24 +65,11 @@ export class EventsController {
   }
 
   /**
-   * This action returns all events
-   */
-  @Get('list')
-  @ApiOkResponse({
-    description: 'Successful operation',
-    isArray: true,
-    type: GetEventDto,
-  })
-  async findAll() {
-    return await this.eventsService.findAll();
-  }
-
-  /**
    * This action returns an event
    */
   @Get(':id')
+  @ApiOkResponse({ description: 'Successful operation' })
   @ApiNotFoundResponse({ description: 'Event not found' })
-  @ApiOkResponse({ description: 'Successful operation', type: GetEventDto })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const event = await this.eventsService.findOne(id);
     if (!event) {
@@ -83,18 +83,44 @@ export class EventsController {
    * This action adds a new vote
    */
   @Post(':id/vote')
+  @HttpCode(200)
+  @ApiOkResponse({ description: 'Successful operation' })
+  @ApiNotFoundResponse({ description: 'Event not found' })
+  @ApiBadRequestResponse({ description: 'Invalid request' })
   async vote(
     @Param('id', ParseIntPipe) id: number,
     @Body() createVoteDto: CreateVoteDto,
   ) {
-    return await this.eventsService.vote(id, createVoteDto);
+    let event;
+    try {
+      event = await this.eventsService.vote(id, createVoteDto);
+    } catch (err) {
+      if (err instanceof InvalidVoteDateException) {
+        throw new BadRequestException('Invalid vote date');
+      } else {
+        throw err;
+      }
+    }
+
+    if (!event) {
+      throw new NotFoundException();
+    }
+
+    return event;
   }
 
   /**
    * This action returns results of an event
    */
   @Get(':id/results')
-  async findOneResult(@Param('id', ParseIntPipe) id: number) {
-    return await this.eventsService.findOneResult(id);
+  @ApiOkResponse({ description: 'Successful operation' })
+  @ApiNotFoundResponse({ description: 'Event not found' })
+  async findOneResults(@Param('id', ParseIntPipe) id: number) {
+    const results = await this.eventsService.findOneResults(id);
+    if (!results) {
+      throw new NotFoundException();
+    }
+
+    return results;
   }
 }
