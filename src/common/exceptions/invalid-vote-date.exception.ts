@@ -1,1 +1,1 @@
-export class InvalidVoteDateException {}
+export class InvalidVoteDateException extends Error {}
