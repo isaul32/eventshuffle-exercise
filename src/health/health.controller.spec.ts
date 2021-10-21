@@ -9,12 +9,20 @@ const healthCheckExecutorMock: Partial<HealthCheckExecutor> = {
 
 describe('HealthController', () => {
   let controller: HealthController;
+  let spyService: HealthCheckService;
 
   beforeEach(async () => {
+    const HealthCheckServiceProvider = {
+      provide: HealthCheckService,
+      useFactory: () => ({
+        check: jest.fn(() => ({ status: 'ok' })),
+      }),
+    };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [HealthController],
       providers: [
         HealthCheckService,
+        HealthCheckServiceProvider,
         {
           provide: HealthCheckExecutor,
           useValue: healthCheckExecutorMock,
@@ -23,9 +31,15 @@ describe('HealthController', () => {
     }).compile();
 
     controller = module.get<HealthController>(HealthController);
+    spyService = module.get<HealthCheckService>(HealthCheckService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('should call check', () => {
+    controller.check();
+    expect(spyService.check).toHaveBeenCalled();
   });
 });

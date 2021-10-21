@@ -48,7 +48,7 @@ describe('Events (e2e)', () => {
   });
 
   describe('GET /api/v1/event/list', () => {
-    it('return a empty list of event object', async () => {
+    it('return an event listing object', async () => {
       return request(app.getHttpServer())
         .get('/api/v1/event/list')
         .expect(200)
@@ -57,7 +57,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('return a non empty list of event object', async () => {
+    it('return an event listing object', async () => {
       const event1 = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
