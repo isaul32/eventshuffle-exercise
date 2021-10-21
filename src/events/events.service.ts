@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Event, Vote } from '@prisma/client';
-import { InvalidVoteDateException } from 'src/common/exceptions/invalid-vote-date.exception';
-import { PrismaService } from '../prisma.service';
+import { InvalidVoteDateException } from './../common/exceptions/invalid-vote-date.exception';
+import { PrismaService } from './../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateVoteDto } from './dto/create-vote.dto';
 

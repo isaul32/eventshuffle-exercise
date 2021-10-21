@@ -11,9 +11,7 @@ import {
   Res,
   BadRequestException,
 } from '@nestjs/common';
-import { EventsService } from './events.service';
-import { CreateEventDto } from './dto/create-event.dto';
-import { CreateVoteDto } from './dto/create-vote.dto';
+import { Request, Response } from 'express';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -21,8 +19,10 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Request, Response } from 'express';
-import { InvalidVoteDateException } from 'src/common/exceptions/invalid-vote-date.exception';
+import { EventsService } from './events.service';
+import { CreateEventDto } from './dto/create-event.dto';
+import { CreateVoteDto } from './dto/create-vote.dto';
+import { InvalidVoteDateException } from './../common/exceptions/invalid-vote-date.exception';
 
 @ApiTags('event')
 @Controller({
