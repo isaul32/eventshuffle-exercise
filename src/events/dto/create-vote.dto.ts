@@ -1,4 +1,4 @@
-import { IsArray, IsISO8601, IsNotEmpty } from 'class-validator';
+import { IsArray, IsDefined, IsISO8601, IsNotEmpty } from 'class-validator';
 
 export class CreateVoteDto {
   /**
@@ -13,6 +13,7 @@ export class CreateVoteDto {
    * @example ['2014-01-01', '2014-01-05']
    */
   @IsArray()
+  @IsDefined()
   @IsISO8601({ strict: false }, { each: true })
   votes: string[];
 }
