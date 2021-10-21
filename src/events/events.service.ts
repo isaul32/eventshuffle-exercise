@@ -69,6 +69,8 @@ export class EventsService {
     if (!event) {
       return null;
     }
+
+    // Validate date votes
     votes.map((vote) => {
       if (
         !event.dates
@@ -79,34 +81,44 @@ export class EventsService {
       }
     });
 
-    if (!event.people.includes(name)) {
-      await this.prismaService.event.update({
+    // Perform multiple modifying action in the same transaction for data integrity.
+    await this.prismaService.$transaction(async (prisma) => {
+      // Add a person to the event if not already.
+      if (!event.people.includes(name)) {
+        await prisma.event.update({
+          where: {
+            id,
+          },
+          data: {
+            people: [...event.people, name],
+          },
+        });
+      }
+
+      // First remove person's old date votes from the event.
+      await prisma.vote.deleteMany({
         where: {
-          id,
-        },
-        data: {
-          people: [...event.people, name],
+          eventId: {
+            equals: id,
+          },
+          name: {
+            equals: name,
+          },
         },
       });
-    }
 
-    await this.prismaService.vote.createMany({
-      data: votes
-        // Add only valid vote dates. Could also throw bad request.
-        .filter((vote) => {
-          return event.dates
-            .map((date) => date.toISOString().substring(0, 10))
-            .includes(vote);
-        })
-        .map((vote) => ({
+      // Next add new date votes to the event.
+      await prisma.vote.createMany({
+        data: votes.map((vote) => ({
           name,
           date: new Date(vote),
           eventId: id,
         })),
-      skipDuplicates: true,
+        skipDuplicates: true,
+      });
     });
 
-    return this.findOne(id);
+    return await this.findOne(id);
   }
 
   async findOneResults(id: number) {
