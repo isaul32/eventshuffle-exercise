@@ -266,6 +266,43 @@ describe('Events (e2e)', () => {
         });
     });
 
+    it('edit votes to an event', async () => {
+      const { body } = await request(app.getHttpServer())
+        .post('/api/v1/event')
+        .send({
+          name: `Jake's secret party`,
+          dates: ['2014-01-01', '2014-01-05', '2014-01-12'],
+        });
+
+      await request(app.getHttpServer())
+        .post(`/api/v1/event/${body.id}/vote`)
+        .send({
+          name: 'Dick',
+          votes: ['2014-01-01'],
+        });
+
+      return request(app.getHttpServer())
+        .post(`/api/v1/event/${body.id}/vote`)
+        .send({
+          name: 'Dick',
+          votes: ['2014-01-01', '2014-01-05', '2014-01-12'],
+        })
+        .expect(200)
+        .expect({
+          id: body.id,
+          name: "Jake's secret party",
+          dates: ['2014-01-01', '2014-01-05', '2014-01-12'],
+          votes: [
+            {
+              date: '2014-01-01',
+              people: ['Dick'],
+            },
+            { date: '2014-01-05', people: ['Dick'] },
+            { date: '2014-01-12', people: ['Dick'] },
+          ],
+        });
+    });
+
     it('add votes to an non exist event', async () => {
       return request(app.getHttpServer())
         .post(`/api/v1/event/1/vote`)
