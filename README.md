@@ -1,5 +1,8 @@
 # Eventshuffle backend API exercise
 
+![GitHub](https://img.shields.io/github/license/isaul32/eventshuffle-exercise)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/isaul32/eventshuffle-exercise/CI)
+
 ## Description
 
 This repository is for the Eventshuffle backend API exercise. The solution is build by using [Nest](https://nestjs.com/) framework.
