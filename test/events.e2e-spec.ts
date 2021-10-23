@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   INestApplication,
-  RequestMethod,
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
