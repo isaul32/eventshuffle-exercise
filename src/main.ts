@@ -22,6 +22,10 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Eventshuffle backend API')
     .setDescription('The awesome API to help scheduling events with friends.')
+    .setLicense(
+      'MIT',
+      'https://github.com/isaul32/eventshuffle-exercise/blob/main/LICENSE',
+    )
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
