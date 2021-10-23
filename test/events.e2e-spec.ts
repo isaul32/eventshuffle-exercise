@@ -198,7 +198,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('show non-existent event', async () => {
+    it('show an non-existent event', async () => {
       return request(app.getHttpServer()).get(`/api/v1/event/1`).expect(404);
     });
   });
@@ -299,7 +299,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('add a vote to non-existent event', async () => {
+    it('add a vote to an non-existent event', async () => {
       return request(app.getHttpServer())
         .post(`/api/v1/event/1/vote`)
         .send({
@@ -520,7 +520,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('show the results of non-existent event', async () => {
+    it('show the results of an non-existent event', async () => {
       return request(app.getHttpServer())
         .get(`/api/v1/event/1/results`)
         .expect(404);

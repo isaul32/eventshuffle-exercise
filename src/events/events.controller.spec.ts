@@ -98,14 +98,14 @@ describe('EventsController', () => {
     });
 
     it('get an non-existent event', async () => {
-      jest.spyOn(spyService, 'findOne').mockImplementation(() => null);
+      jest.spyOn(spyService, 'findOne').mockImplementationOnce(() => null);
       expect(async () => {
         await controller.findOne(1);
       }).rejects.toThrow(NotFoundException);
     });
 
     it('add a vote to the non-existent event', async () => {
-      jest.spyOn(spyService, 'vote').mockImplementation(() => null);
+      jest.spyOn(spyService, 'vote').mockImplementationOnce(() => null);
       expect(async () => {
         await controller.vote(1, {
           name: 'Dick',
@@ -116,7 +116,7 @@ describe('EventsController', () => {
 
     it('add a vote to the event without a valid date', async () => {
       expect(async () => {
-        jest.spyOn(spyService, 'vote').mockImplementation(() => {
+        jest.spyOn(spyService, 'vote').mockImplementationOnce(() => {
           throw new InvalidVoteDateException();
         });
         await controller.vote(1, {
@@ -128,7 +128,7 @@ describe('EventsController', () => {
 
     it('add a vote to the event and throw error', async () => {
       expect(async () => {
-        jest.spyOn(spyService, 'vote').mockImplementation(() => {
+        jest.spyOn(spyService, 'vote').mockImplementationOnce(() => {
           throw new Error();
         });
         await controller.vote(1, {
@@ -140,7 +140,9 @@ describe('EventsController', () => {
 
     it('show the results of the non-existent event', async () => {
       expect(async () => {
-        jest.spyOn(spyService, 'findOneResults').mockImplementation(() => null);
+        jest
+          .spyOn(spyService, 'findOneResults')
+          .mockImplementationOnce(() => null);
         await controller.findOneResults(1);
       }).rejects.toThrow(NotFoundException);
     });

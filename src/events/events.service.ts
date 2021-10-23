@@ -83,7 +83,7 @@ export class EventsService {
 
     // Perform multiple modifying action in the same transaction for data integrity.
     await this.prismaService.$transaction(async (prisma) => {
-      // Add a person to the event if not already.
+      // Add a person to the event if not already added.
       if (!event.people.includes(name)) {
         await prisma.event.update({
           where: {
