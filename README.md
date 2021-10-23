@@ -5,9 +5,9 @@
 
 ## Description
 
-This repository is for the Eventshuffle backend API exercise. The solution is build by using [Nest](https://nestjs.com/) framework.
+This repository is my submission for the [Eventshuffle backend API](Eventshuffle.md) exercise. The solution is build by using [Nest framework](https://nestjs.com/).
 
-## Running the app
+## Running the application
 
 ### Setup database
 
