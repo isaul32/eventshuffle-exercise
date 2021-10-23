@@ -24,11 +24,7 @@ describe('Events (e2e)', () => {
     await prisma.event.deleteMany();
 
     app.useGlobalPipes(new ValidationPipe());
-    app.setGlobalPrefix('api', {
-      exclude: [
-        { path: '', method: RequestMethod.GET }, // Exclude root redirect
-      ],
-    });
+    app.setGlobalPrefix('api');
     app.enableVersioning({
       type: VersioningType.URI,
     });
@@ -48,7 +44,7 @@ describe('Events (e2e)', () => {
   });
 
   describe('GET /api/v1/event/list', () => {
-    it('return an event listing object', async () => {
+    it('return an empty event listing object', async () => {
       return request(app.getHttpServer())
         .get('/api/v1/event/list')
         .expect(200)
@@ -57,7 +53,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('return an event listing object', async () => {
+    it('return an non empty event listing object', async () => {
       const event1 = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -127,7 +123,7 @@ describe('Events (e2e)', () => {
       expect(status).toBe(400);
     });
 
-    it('create an event without a any date', async () => {
+    it('create an event without any date', async () => {
       const { status } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -202,13 +198,13 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('show an non exist event', async () => {
+    it('show non-existent event', async () => {
       return request(app.getHttpServer()).get(`/api/v1/event/1`).expect(404);
     });
   });
 
   describe('POST /api/v1/event/{id}/vote', () => {
-    it('add votes to an event', async () => {
+    it('add a vote to the event', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -266,7 +262,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('edit votes to an event', async () => {
+    it('edit a vote to the event', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -303,7 +299,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('add votes to an non exist event', async () => {
+    it('add a vote to non-existent event', async () => {
       return request(app.getHttpServer())
         .post(`/api/v1/event/1/vote`)
         .send({
@@ -313,7 +309,7 @@ describe('Events (e2e)', () => {
         .expect(404);
     });
 
-    it('add votes to an event without a name', async () => {
+    it('add a vote to the event without a name', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -329,7 +325,7 @@ describe('Events (e2e)', () => {
         .expect(400);
     });
 
-    it('add votes to an event without date votes', async () => {
+    it('add a vote to the event without date votes', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -345,7 +341,7 @@ describe('Events (e2e)', () => {
         .expect(400);
     });
 
-    it('add votes to an event without a any date', async () => {
+    it('add a vote to the event without any date', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -368,7 +364,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('add votes to an event without a valid date', async () => {
+    it('add a vote to the event without a valid date', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -385,7 +381,7 @@ describe('Events (e2e)', () => {
         .expect(400);
     });
 
-    it('add votes to an event without a any date', async () => {
+    it('add a vote to the event without any date', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -468,7 +464,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('show the results of an event without a any person', async () => {
+    it('show the results of an event without any person', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -499,7 +495,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('show the results of an event without a any valid date vote', async () => {
+    it('show the results of an event without any valid date vote', async () => {
       const { body } = await request(app.getHttpServer())
         .post('/api/v1/event')
         .send({
@@ -524,7 +520,7 @@ describe('Events (e2e)', () => {
         });
     });
 
-    it('show the results of an non exist event', async () => {
+    it('show the results of non-existent event', async () => {
       return request(app.getHttpServer())
         .get(`/api/v1/event/1/results`)
         .expect(404);
