@@ -1,7 +1,9 @@
 .dockerignore
 .git
+coverage
 dist
 docker-compose.yml
 Dockerfile
+documentation
 node_modules
 npm-debug.log

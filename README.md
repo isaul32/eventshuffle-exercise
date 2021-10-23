@@ -60,3 +60,17 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Tools
+
+[Prisma Studio](https://www.prisma.io/studio) is a tool for exploring and manipulating database data.
+
+```bash
+npm run studio
+```
+
+[Compodoc](https://docs.nestjs.com/recipes/documentation) is a tool for generating project documentation.
+
+```bash
+npm run compodoc
+```
