@@ -17,7 +17,7 @@ describe('AppController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call redirect', () => {
+  it('should redirect to API documentation', () => {
     controller.redirect({
       redirect: (value: string): void => {
         expect(value).toBe('/api');

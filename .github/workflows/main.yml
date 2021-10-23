@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    needs: [run-unit-tests, run-e2e-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag eventshuffle-backend:$(date +%s)
+
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14 LTS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Run unit tests
+        run: |
+          npm install
+          npm run test:cov
+
+  run-e2e-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: eventshuffle
+          POSTGRES_PASSWORD: eventshuffle
+          POSTGRES_DB: eventshuffle
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      DATABASE_URL: postgresql://eventshuffle:eventshuffle@localhost:5432/eventshuffle?schema=public
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14 LTS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Run e2e tests
+        run: |
+          npm install
+          npm run test:e2e

@@ -15,7 +15,10 @@ describe('HealthController', () => {
     const HealthCheckServiceProvider = {
       provide: HealthCheckService,
       useFactory: () => ({
-        check: jest.fn(() => ({ status: 'ok' })),
+        check: jest.fn(() => ({
+          status: 'ok',
+          details: {},
+        })),
       }),
     };
     const module: TestingModule = await Test.createTestingModule({
@@ -38,8 +41,9 @@ describe('HealthController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call check', () => {
-    controller.check();
+  it('should return the result', async () => {
+    const result = await controller.check();
     expect(spyService.check).toHaveBeenCalled();
+    expect(result).toStrictEqual({ status: 'ok', details: {} });
   });
 });
