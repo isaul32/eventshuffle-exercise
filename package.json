@@ -84,7 +84,8 @@
       "**/*.(t|j)s",
       "!**/*.module.(t|j)s",
       "!main.(t|j)s",
-      "!**/prisma.service.(t|j)s"
+      "!**/prisma.service.(t|j)s",
+      "!health/(health.controller|prisma.health).(t|j)s"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
