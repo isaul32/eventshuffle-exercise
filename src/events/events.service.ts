@@ -4,12 +4,20 @@ import { InvalidVoteDateException } from './../common/exceptions/invalid-vote-da
 import { PrismaService } from './../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateVoteDto } from './dto/create-vote.dto';
+import {
+  AddVotesResponseDto,
+  CreateEventResponseDto,
+  ListAllEventsResponseDto,
+  ShowEventResponseDto,
+  ShowEventVoteResponseDto,
+  ShowResultsResponseDto,
+} from './dto/responses.dto';
 
 @Injectable()
 export class EventsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<ListAllEventsResponseDto> {
     const events = await this.prismaService.event.findMany();
 
     return {
@@ -20,7 +28,9 @@ export class EventsService {
     };
   }
 
-  async create(createEventDto: CreateEventDto) {
+  async create(
+    createEventDto: CreateEventDto,
+  ): Promise<CreateEventResponseDto> {
     const { name, dates } = createEventDto;
 
     const { id } = await this.prismaService.event.create({
@@ -35,7 +45,7 @@ export class EventsService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<ShowEventResponseDto> {
     const event = await this.prismaService.event.findUnique({
       where: {
         id,
@@ -57,7 +67,10 @@ export class EventsService {
     };
   }
 
-  async vote(id: number, createVoteDto: CreateVoteDto) {
+  async vote(
+    id: number,
+    createVoteDto: CreateVoteDto,
+  ): Promise<AddVotesResponseDto> {
     const { name, votes } = createVoteDto;
 
     const event = await this.prismaService.event.findUnique({
@@ -121,7 +134,7 @@ export class EventsService {
     return await this.findOne(id);
   }
 
-  async findOneResults(id: number) {
+  async findOneResults(id: number): Promise<ShowResultsResponseDto> {
     const event = await this.prismaService.event.findUnique({
       where: {
         id,
@@ -156,10 +169,7 @@ export class EventsService {
     event: Event & {
       votes: Vote[];
     },
-  ): {
-    date: string;
-    people: string[];
-  }[] {
+  ): ShowEventVoteResponseDto[] {
     const tempVotes = {};
     event.votes.map((vote) => {
       const date = vote.date.toISOString().substring(0, 10);

@@ -23,6 +23,13 @@ import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { InvalidVoteDateException } from './../common/exceptions/invalid-vote-date.exception';
+import {
+  AddVotesResponseDto,
+  CreateEventResponseDto,
+  ListAllEventsResponseDto,
+  ShowEventResponseDto,
+  ShowResultsResponseDto,
+} from './dto/responses.dto';
 
 @ApiTags('event')
 @Controller({
@@ -38,7 +45,7 @@ export class EventsController {
   @Get('list')
   @ApiOkResponse({
     description: 'Successful operation',
-    isArray: true,
+    type: ListAllEventsResponseDto,
   })
   async findAll() {
     return await this.eventsService.findAll();
@@ -51,6 +58,7 @@ export class EventsController {
   @HttpCode(201)
   @ApiCreatedResponse({
     description: 'Successful operation',
+    type: CreateEventResponseDto,
   })
   @ApiBadRequestResponse({ description: 'Invalid request' })
   async create(
@@ -68,7 +76,10 @@ export class EventsController {
    * This action returns an event
    */
   @Get(':id')
-  @ApiOkResponse({ description: 'Successful operation' })
+  @ApiOkResponse({
+    description: 'Successful operation',
+    type: ShowEventResponseDto,
+  })
   @ApiNotFoundResponse({ description: 'Event not found' })
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const event = await this.eventsService.findOne(id);
@@ -84,7 +95,10 @@ export class EventsController {
    */
   @Post(':id/vote')
   @HttpCode(200)
-  @ApiOkResponse({ description: 'Successful operation' })
+  @ApiOkResponse({
+    description: 'Successful operation',
+    type: AddVotesResponseDto,
+  })
   @ApiNotFoundResponse({ description: 'Event not found' })
   @ApiBadRequestResponse({ description: 'Invalid request' })
   async vote(
@@ -113,7 +127,10 @@ export class EventsController {
    * This action returns results of an event
    */
   @Get(':id/results')
-  @ApiOkResponse({ description: 'Successful operation' })
+  @ApiOkResponse({
+    description: 'Successful operation',
+    type: ShowResultsResponseDto,
+  })
   @ApiNotFoundResponse({ description: 'Event not found' })
   async findOneResults(@Param('id', ParseIntPipe) id: number) {
     const results = await this.eventsService.findOneResults(id);
