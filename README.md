@@ -14,7 +14,7 @@ This repository is my submission for the [Eventshuffle backend API](Eventshuffle
 Start PostgreSQL database with Docker Compose or start PostgreSQL 14 on host and set connection details with DATABASE_URL environment variable.
 
 ```bash
-$ docker-compose up -d postgres --build
+$ docker compose up -d postgres --build
 ```
 
 ### Without Docker
@@ -44,7 +44,7 @@ $ npm run start:prod
 Start API backend and database services.
 
 ```bash
-$ docker-compose up -d --build
+$ docker compose up -d --build
 
 # navigate to http://localhost:3000/
 ```
